@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main_navigation.dart';
 
 // Palette de couleurs de l'application
 class AppColors {
@@ -30,14 +31,13 @@ class HomeScreen extends StatelessWidget {
             children: [
               _buildHeader(userName),
               _buildBalanceCard(balance, currency),
-              _buildQuickActions(),
+              _buildQuickActions(context),
               _buildRecentActivity(),
               const SizedBox(height: 24),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(),
     );
   }
 
@@ -146,12 +146,12 @@ class HomeScreen extends StatelessWidget {
   }
 
   // Grille d'actions rapides
-  Widget _buildQuickActions() {
+  Widget _buildQuickActions(BuildContext context) {
     final actions = [
-      {"icon": Icons.assignment_outlined, "label": "Sondages"},
-      {"icon": Icons.sports_esports_outlined, "label": "Jeux"},
-      {"icon": Icons.receipt_long_outlined, "label": "Historique"},
-      {"icon": Icons.headset_mic_outlined, "label": "Support"},
+      {"icon": Icons.assignment_outlined, "label": "Sondages", "tabIndex": 1},
+      {"icon": Icons.sports_esports_outlined, "label": "Jeux", "tabIndex": null},
+      {"icon": Icons.receipt_long_outlined, "label": "Historique", "tabIndex": null},
+      {"icon": Icons.headset_mic_outlined, "label": "Support", "tabIndex": null},
     ];
 
     return Padding(
@@ -159,23 +159,31 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: actions.map((action) {
-          return Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(16),
+          return GestureDetector(
+            onTap: () {
+              final tabIndex = action["tabIndex"] as int?;
+              if (tabIndex != null) {
+                MainNavigation.of(context)?.goToTab(tabIndex);
+              }
+            },
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(action["icon"] as IconData,
+                      color: AppColors.primary, size: 24),
                 ),
-                child: Icon(action["icon"] as IconData,
-                    color: AppColors.primary, size: 24),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                action["label"] as String,
-                style: const TextStyle(fontSize: 12, color: AppColors.textDark),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  action["label"] as String,
+                  style: const TextStyle(fontSize: 12, color: AppColors.textDark),
+                ),
+              ],
+            ),
           );
         }).toList(),
       ),
@@ -245,19 +253,4 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Barre de navigation inférieure
-  Widget _buildBottomNav() {
-    return BottomNavigationBar(
-      currentIndex: 0,
-      selectedItemColor: AppColors.primary,
-      unselectedItemColor: AppColors.textGrey,
-      type: BottomNavigationBarType.fixed,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Accueil"),
-        BottomNavigationBarItem(icon: Icon(Icons.assignment_outlined), label: "Sondages"),
-        BottomNavigationBarItem(icon: Icon(Icons.wallet_outlined), label: "Portefeuille"),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profil"),
-      ],
-    );
-  }
 }
