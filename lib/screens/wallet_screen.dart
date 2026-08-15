@@ -174,6 +174,31 @@ class _WithdrawSheet extends StatefulWidget {
   State<_WithdrawSheet> createState() => _WithdrawSheetState();
 }
 
+// Format d'exemple du numéro de téléphone selon le pays
+// (Bénin utilise le préfixe 01 depuis la réforme de 2021 -> 10 chiffres)
+String phoneHintForCountry(String? country) {
+  switch (country) {
+    case "Bénin":
+      return "Ex: 01 97 00 00 00";
+    case "Côte d'Ivoire":
+      return "Ex: 07 07 00 00 00";
+    case "Sénégal":
+      return "Ex: 77 000 00 00";
+    case "Togo":
+      return "Ex: 90 00 00 00";
+    case "Mali":
+      return "Ex: 76 00 00 00";
+    case "Burkina Faso":
+      return "Ex: 70 00 00 00";
+    case "Niger":
+      return "Ex: 90 00 00 00";
+    case "Guinée":
+      return "Ex: 620 00 00 00";
+    default:
+      return "Sélectionne d'abord ton pays";
+  }
+}
+
 class _WithdrawSheetState extends State<_WithdrawSheet> {
   CountryPayment? _selectedCountry;
   String? _selectedOperator;
@@ -274,7 +299,7 @@ class _WithdrawSheetState extends State<_WithdrawSheet> {
             TextField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
-              decoration: _inputDecoration("Ex: 97 00 00 00"),
+              decoration: _inputDecoration(phoneHintForCountry(_selectedCountry?.country)),
             ),
             const SizedBox(height: 16),
 
