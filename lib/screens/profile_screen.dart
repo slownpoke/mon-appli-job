@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart'; // pour AppColors
+import 'login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -32,7 +33,7 @@ class ProfileScreen extends StatelessWidget {
           _buildMenuTile(Icons.description_outlined, "Conditions d'utilisation"),
           _buildMenuTile(Icons.info_outline, "À propos de l'application"),
           const SizedBox(height: 20),
-          _buildLogoutButton(),
+          _buildLogoutButton(context),
           const SizedBox(height: 30),
         ],
       ),
@@ -113,14 +114,17 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLogoutButton() {
+  Widget _buildLogoutButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: double.infinity,
         child: OutlinedButton.icon(
           onPressed: () {
-            // TODO: gérer la déconnexion
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (route) => false,
+            );
           },
           icon: const Icon(Icons.logout, color: Colors.redAccent, size: 18),
           label: const Text("Se déconnecter", style: TextStyle(color: Colors.redAccent)),
