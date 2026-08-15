@@ -224,7 +224,7 @@ class _WithdrawSheetState extends State<_WithdrawSheet> {
             const Text("Pays", style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textDark)),
             const SizedBox(height: 8),
             DropdownButtonFormField<CountryPayment>(
-              initialValue: _selectedCountry,
+              value: _selectedCountry,
               decoration: _inputDecoration("Sélectionne ton pays"),
               items: supportedCountries.map((c) {
                 return DropdownMenuItem(
