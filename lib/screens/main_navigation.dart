@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'surveys_screen.dart';
+import 'wallet_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -21,7 +22,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _screens = const [
     HomeScreen(),
     SurveysScreen(),
-    _PlaceholderScreen(title: "Portefeuille", icon: Icons.wallet_outlined),
+    WalletScreen(),
     _PlaceholderScreen(title: "Profil", icon: Icons.person_outline),
   ];
 

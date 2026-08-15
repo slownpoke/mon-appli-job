@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(userName),
-              _buildBalanceCard(balance, currency),
+              _buildBalanceCard(context, balance, currency),
               _buildQuickActions(context),
               _buildRecentActivity(),
               const SizedBox(height: 24),
@@ -83,7 +83,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   // Carte du solde, positionnée à cheval sur l'en-tête
-  Widget _buildBalanceCard(double balance, String currency) {
+  Widget _buildBalanceCard(BuildContext context, double balance, String currency) {
     return Transform.translate(
       offset: const Offset(0, -30),
       child: Padding(
@@ -122,7 +122,7 @@ class HomeScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: naviguer vers l'écran de retrait
+                    MainNavigation.of(context)?.goToTab(2);
                   },
                   icon: const Icon(Icons.account_balance_wallet_outlined,
                       size: 18),
