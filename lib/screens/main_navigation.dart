@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'surveys_screen.dart';
 import 'wallet_screen.dart';
+import 'profile_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -23,7 +24,7 @@ class _MainNavigationState extends State<MainNavigation> {
     HomeScreen(),
     SurveysScreen(),
     WalletScreen(),
-    _PlaceholderScreen(title: "Profil", icon: Icons.person_outline),
+    ProfileScreen(),
   ];
 
   void goToTab(int index) {
@@ -49,39 +50,6 @@ class _MainNavigationState extends State<MainNavigation> {
           BottomNavigationBarItem(icon: Icon(Icons.wallet_outlined), label: "Portefeuille"),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profil"),
         ],
-      ),
-    );
-  }
-}
-
-// Écran temporaire en attendant de concevoir Portefeuille et Profil en détail
-class _PlaceholderScreen extends StatelessWidget {
-  final String title;
-  final IconData icon;
-
-  const _PlaceholderScreen({required this.title, required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        title: Text(title, style: const TextStyle(color: Colors.white)),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 50, color: AppColors.textGrey),
-            const SizedBox(height: 12),
-            Text(
-              "Écran $title à venir",
-              style: const TextStyle(color: AppColors.textGrey),
-            ),
-          ],
-        ),
       ),
     );
   }
