@@ -5,24 +5,26 @@ import 'home_screen.dart'; // pour AppColors
 class CountryPayment {
   final String country;
   final String flag;
+  final String callingCode; // indicatif international, ex: +229 pour le Bénin
   final List<String> operators;
 
   const CountryPayment({
     required this.country,
     required this.flag,
+    required this.callingCode,
     required this.operators,
   });
 }
 
 const List<CountryPayment> supportedCountries = [
-  CountryPayment(country: "Bénin", flag: "🇧🇯", operators: ["MTN MoMo", "Moov Money"]),
-  CountryPayment(country: "Côte d'Ivoire", flag: "🇨🇮", operators: ["MTN MoMo", "Orange Money", "Moov Money", "Wave"]),
-  CountryPayment(country: "Sénégal", flag: "🇸🇳", operators: ["Orange Money", "Free Money", "Wave"]),
-  CountryPayment(country: "Togo", flag: "🇹🇬", operators: ["Togocel T-Money", "Moov Flooz"]),
-  CountryPayment(country: "Mali", flag: "🇲🇱", operators: ["Orange Money", "Moov Money"]),
-  CountryPayment(country: "Burkina Faso", flag: "🇧🇫", operators: ["Orange Money", "Moov Money"]),
-  CountryPayment(country: "Niger", flag: "🇳🇪", operators: ["Airtel Money", "Orange Money"]),
-  CountryPayment(country: "Guinée", flag: "🇬🇳", operators: ["Orange Money", "MTN MoMo"]),
+  CountryPayment(country: "Bénin", flag: "🇧🇯", callingCode: "+229", operators: ["MTN MoMo", "Moov Money"]),
+  CountryPayment(country: "Côte d'Ivoire", flag: "🇨🇮", callingCode: "+225", operators: ["MTN MoMo", "Orange Money", "Moov Money", "Wave"]),
+  CountryPayment(country: "Sénégal", flag: "🇸🇳", callingCode: "+221", operators: ["Orange Money", "Free Money", "Wave"]),
+  CountryPayment(country: "Togo", flag: "🇹🇬", callingCode: "+228", operators: ["Togocel T-Money", "Moov Flooz"]),
+  CountryPayment(country: "Mali", flag: "🇲🇱", callingCode: "+223", operators: ["Orange Money", "Moov Money"]),
+  CountryPayment(country: "Burkina Faso", flag: "🇧🇫", callingCode: "+226", operators: ["Orange Money", "Moov Money"]),
+  CountryPayment(country: "Niger", flag: "🇳🇪", callingCode: "+227", operators: ["Airtel Money", "Orange Money"]),
+  CountryPayment(country: "Guinée", flag: "🇬🇳", callingCode: "+224", operators: ["Orange Money", "MTN MoMo"]),
 ];
 
 class WalletScreen extends StatelessWidget {

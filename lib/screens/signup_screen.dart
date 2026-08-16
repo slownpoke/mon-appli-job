@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home_screen.dart'; // pour AppColors
-import 'main_navigation.dart';
 import 'wallet_screen.dart'; // pour supportedCountries
+import 'otp_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,9 +14,54 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
   CountryPayment? _selectedCountry;
-  bool _obscurePassword = true;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  Future<void> _sendCode() async {
+    if (_nameController.text.trim().isEmpty) {
+      setState(() => _errorMessage = "Renseigne ton nom complet");
+      return;
+    }
+    if (_selectedCountry == null || _phoneController.text.trim().isEmpty) {
+      setState(() => _errorMessage = "Renseigne ton pays et ton numéro");
+      return;
+    }
+
+    final fullPhone = "${_selectedCountry!.callingCode}${_phoneController.text.trim().replaceAll(' ', '')}";
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: fullPhone,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = "Erreur : ${e.message}";
+        });
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        setState(() => _isLoading = false);
+        if (!mounted) return;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => OtpScreen(
+              verificationId: verificationId,
+              phoneNumber: fullPhone,
+            ),
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +108,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   items: supportedCountries.map((c) {
                     return DropdownMenuItem(
                       value: c,
-                      child: Text("${c.flag}  ${c.country}"),
+                      child: Text("${c.flag}  ${c.country} (${c.callingCode})"),
                     );
                   }).toList(),
                   onChanged: (value) => setState(() => _selectedCountry = value),
@@ -80,34 +126,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     Icons.phone_outlined,
                   ),
                 ),
-                const SizedBox(height: 16),
 
-                const Text("Mot de passe",
-                    style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textDark)),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: _inputDecoration("Au moins 6 caractères", Icons.lock_outline).copyWith(
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                        color: AppColors.textGrey,
-                        size: 20,
-                      ),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                    ),
-                  ),
-                ),
+                if (_errorMessage != null) ...[
+                  const SizedBox(height: 12),
+                  Text(_errorMessage!,
+                      style: const TextStyle(color: Colors.redAccent, fontSize: 13)),
+                ],
+
                 const SizedBox(height: 28),
-
                 ElevatedButton(
-                  onPressed: () {
-                    // TODO: envoyer l'inscription au serveur
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => const MainNavigation()),
-                    );
-                  },
+                  onPressed: _isLoading ? null : _sendCode,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
@@ -115,7 +143,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
-                  child: const Text("S'inscrire", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                      : const Text("Recevoir le code par SMS", style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 20),
 
